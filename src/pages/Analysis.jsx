@@ -35,6 +35,7 @@ const Analysis = ({ lang = 'ru' }) => {
     const [history, setHistory] = useState([]);
     const [showHistory, setShowHistory] = useState(false);
     const [fileInfo, setFileInfo] = useState({});
+    const [selectedCrop, setSelectedCrop] = useState(null);
 
     const texts = {
         ru: {
@@ -55,6 +56,9 @@ const Analysis = ({ lang = 'ru' }) => {
             loginRequired: "Требуется вход",
             authNotification: "Пожалуйста, войдите в систему для доступа к анализу",
             title: "Анализируйте растения с помощью AI",
+            cropLabel: "Выберите культуру",
+            apples: "Яблоки",
+            apricots: "Абрикосы",
         
             steps: [
             {
@@ -128,11 +132,14 @@ const Analysis = ({ lang = 'ru' }) => {
             loginRequired: "Login Required",
             authNotification: "Please login to access the analysis features",
             title: "Analyze plants with AI",
+            cropLabel: "Select crop",
+            apples: "Apples",
+            apricots: "Apricots",
             steps: [
         {
             id: 1,
-            t: "Upload", // Было name
-            d: "Upload a photo or video of the plant", // Было desc
+            t: "Upload",
+            d: "Upload a photo or video of the plant",
             icon: (
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 16V4M12 4L8 8M12 4L16 8M4 20H20" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
@@ -172,7 +179,7 @@ const Analysis = ({ lang = 'ru' }) => {
             )
         }
     ],
-    stats: { // Не забудьте добавить этот блок, иначе результат анализа на англ. упадет с ошибкой
+    stats: {
         diagnosis: "Detected", cause: "Description", recommendation: "Measures",
         confidence: "Confidence", imageDetails: "Image Info", plantType: "Crop"
     },
@@ -329,6 +336,22 @@ const Analysis = ({ lang = 'ru' }) => {
             fontWeight: '600',
             background: status === 'healthy' ? '#E8F5E9' : '#FFEBEE',
             color: status === 'healthy' ? '#2E7D32' : '#C62828'
+        }),
+        cropButton: (isActive) => ({
+            padding: '12px 32px',
+            borderRadius: '12px',
+            fontWeight: '600',
+            fontSize: '15px',
+            cursor: 'pointer',
+            border: '1.5px solid #B0B8B0',
+            background: isActive ? '#D6D6D6' : '#ffffff',
+            color: isActive ? '#2D3A2D' : '#4A5A4A',
+            boxShadow: isActive
+                ? 'inset 0 2px 5px rgba(0,0,0,0.18), 0 1px 0 #fff'
+                : '0 3px 0 #B0B8B0, 0 4px 6px rgba(0,0,0,0.08)',
+            transform: isActive ? 'translateY(2px)' : 'translateY(0)',
+            transition: 'all 0.12s ease',
+            outline: 'none',
         })
     };
 
@@ -347,36 +370,43 @@ const Analysis = ({ lang = 'ru' }) => {
                     <p style={{ color: '#667A66', fontSize: '18px' }}>{t.subtitle}</p>
                 </div>
 
-                {/* User Profile Mini */}
-                {/* {currentUser && (
-                    <div style={{ 
-                        display: 'flex', alignItems: 'center', gap: '15px', 
-                        background: '#fff', padding: '12px 20px', borderRadius: '16px',
-                        marginBottom: '30px', border: '1px solid #EDF2ED'
-                    }}>
-                        <div style={{ 
-                            width: '40px', height: '40px', background: '#4CAF50', 
-                            borderRadius: '12px', display: 'flex', alignItems: 'center', 
-                            justifyContent: 'center', color: '#fff', fontWeight: 'bold'
-                        }}>
-                            {currentUser.name?.charAt(0).toUpperCase()}
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: '600', fontSize: '14px' }}>{currentUser.name}</div>
-                            <div style={{ fontSize: '12px', color: '#888' }}>ID: {MemoryStorage.getUserId()}</div>
-                        </div>
-                    </div>
-                )} */}
-
                 {/* Main Content Area */}
                 <div style={styles.card}>
                     {analysisStage === 'upload' && (
                         <div className="upload-container">
+                            {/* Auth notification */}
                             {showAuthNotification && (
                                 <div style={{ background: '#FFF4E5', color: '#663C00', padding: '15px', borderRadius: '12px', marginBottom: '20px', fontSize: '14px' }}>
                                      {t.authNotification}
                                 </div>
                             )}
+
+                            {/* Crop selector buttons */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '14px',
+                                marginBottom: '24px',
+                                justifyContent: 'center',
+                            }}>
+                                <span style={{ fontSize: '14px', color: '#7A8C7A', fontWeight: '500', marginRight: '4px' }}>
+                                    {t.cropLabel}:
+                                </span>
+                                <button
+                                    style={styles.cropButton(selectedCrop === 'apples')}
+                                    onClick={() => setSelectedCrop(selectedCrop === 'apples' ? null : 'apples')}
+                                >
+                                    🍎 {t.apples}
+                                </button>
+                                <button
+                                    style={styles.cropButton(selectedCrop === 'apricots')}
+                                    onClick={() => setSelectedCrop(selectedCrop === 'apricots' ? null : 'apricots')}
+                                >
+                                    🍑 {t.apricots}
+                                </button>
+                            </div>
+
+                            {/* Upload area */}
                             <div 
                                 onClick={handleFileSelect}
                                 onDragOver={handleDragOver}
@@ -467,103 +497,57 @@ const Analysis = ({ lang = 'ru' }) => {
 
                 {/* Step Cards Section */}
                 <div style={{ 
-    display: 'grid', 
-    gridTemplateColumns: 'repeat(4, 1fr)', // 1fr делает колонки одинаковыми и широкими
-    gap: '24px', 
-    marginTop: '40px', 
-    width: '100%' 
-}}>
-    {t.steps.map((step, i) => (
-        <div key={i} style={{ 
-            background: 'white', 
-            padding: '40px 20px', // Увеличили верхний/нижний отступ для высоты
-            borderRadius: '25px', 
-            border: '1px solid #E8EDF2', 
-            // Центрирование содержимого карточки:
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
-        }}>
-            {/* Контейнер для SVG */}
-            <div style={{ 
-                marginBottom: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '64px',
-                height: '64px',
-                background: '#e8ede8',
-                borderRadius: '18px',
-                flexShrink: 0 // Чтобы иконку не сжимало
-            }}>
-                {step.icon}
-            </div>
-
-            <div style={{ 
-                fontWeight: '700', 
-                fontSize: '16px', // Чуть увеличил для читабельности
-                marginBottom: '10px',
-                color: '#1A2E1A' 
-            }}>
-                {step.t}
-            </div>
-            
-            <div style={{ 
-                fontSize: '13px', 
-                color: '#7A8C7A',
-                lineHeight: '1.4',
-                maxWidth: '200px' // Ограничиваем ширину текста, чтобы он не расплывался
-            }}>
-                {step.d}
-            </div>
-        </div>
-    ))}
-</div>
-
-                {/* History Section */}
-                {/* {currentUser && (
-                    <div style={{ marginTop: '60px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                            <h3 style={{ margin: 0 }}>{t.history}</h3>
-                            <button onClick={() => setShowHistory(!showHistory)} style={{ border: 'none', background: 'none', color: '#4CAF50', fontWeight: '600', cursor: 'pointer' }}>
-                                {showHistory ? 'Скрыть' : 'Показать все'}
-                            </button>
-                        </div>
-
-                        {showHistory && (
-                            <div style={{ display: 'grid', gap: '15px' }}>
-                                {history.length > 0 ? history.slice(0, 5).map((item, idx) => (
-                                    <div key={idx} style={{ 
-                                        display: 'flex', alignItems: 'center', gap: '15px', 
-                                        background: '#fff', padding: '15px', borderRadius: '18px',
-                                        border: '1px solid #EEE'
-                                    }}>
-                                        <div style={{ width: '60px', height: '60px', borderRadius: '12px', overflow: 'hidden', flexShrink: 0 }}>
-                                            <img src={item.image_url || 'https://via.placeholder.com/60'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="H" />
-                                        </div>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: '600', fontSize: '15px' }}>{item.status_text || 'Анализ'}</div>
-                                            <div style={{ fontSize: '12px', color: '#999' }}>{new Date(item.date).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}</div>
-                                        </div>
-                                        <div style={styles.badge(item.status_text?.includes('Здоров') || item.status_text?.includes('Healthy') ? 'healthy' : 'sick')}>
-                                            {item.confidence}%
-                                        </div>
-                                    </div>
-                                )) : (
-                                    <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>{t.noHistory}</div>
-                                )}
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '24px', 
+                    marginTop: '40px', 
+                    width: '100%' 
+                }}>
+                    {t.steps.map((step, i) => (
+                        <div key={i} style={{ 
+                            background: 'white', 
+                            padding: '40px 20px',
+                            borderRadius: '25px', 
+                            border: '1px solid #E8EDF2', 
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+                        }}>
+                            <div style={{ 
+                                marginBottom: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '64px',
+                                height: '64px',
+                                background: '#e8ede8',
+                                borderRadius: '18px',
+                                flexShrink: 0
+                            }}>
+                                {step.icon}
                             </div>
-                        )}
-                    </div> */}
-                {/* )} */}
-
-                {/* Debug Info */}
-                {/* <div style={{ marginTop: '60px', opacity: 0.4, fontSize: '10px', textAlign: 'center' }}>
-                    Endpoints: POST /user/{MemoryStorage.getUserId()}/analyze • GET /user/{MemoryStorage.getUserId()}/history
-                </div> */}
+                            <div style={{ 
+                                fontWeight: '700', 
+                                fontSize: '16px',
+                                marginBottom: '10px',
+                                color: '#1A2E1A' 
+                            }}>
+                                {step.t}
+                            </div>
+                            <div style={{ 
+                                fontSize: '13px', 
+                                color: '#7A8C7A',
+                                lineHeight: '1.4',
+                                maxWidth: '200px'
+                            }}>
+                                {step.d}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <style>{`
@@ -574,4 +558,4 @@ const Analysis = ({ lang = 'ru' }) => {
     );
 };
 
-export default Analysis; 
+export default Analysis;
