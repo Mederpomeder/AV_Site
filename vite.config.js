@@ -1,6 +1,7 @@
 
 
 export default {
+  base: '/AV_Site/',
   server: {
     proxy: {
       '/api': {
