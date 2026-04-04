@@ -196,15 +196,6 @@ const Register = ({ lang, onClose }) => {
                     </div>
                 </form>
                 
-                <div style={{ 
-                    marginTop: '15px', 
-                    fontSize: '12px', 
-                    color: '#666',
-                    textAlign: 'center' 
-                }}>
-                    * — обязательные поля<br/>
-                    Используется эндпоинт: <code>/register</code>
-                </div>
             </div>
         </div>
     );

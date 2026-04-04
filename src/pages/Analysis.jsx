@@ -381,31 +381,6 @@ const Analysis = ({ lang = 'ru' }) => {
                                 </div>
                             )}
 
-                            {/* Crop selector buttons */}
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '14px',
-                                marginBottom: '24px',
-                                justifyContent: 'center',
-                            }}>
-                                <span style={{ fontSize: '14px', color: '#7A8C7A', fontWeight: '500', marginRight: '4px' }}>
-                                    {t.cropLabel}:
-                                </span>
-                                <button
-                                    style={styles.cropButton(selectedCrop === 'apples')}
-                                    onClick={() => setSelectedCrop(selectedCrop === 'apples' ? null : 'apples')}
-                                >
-                                    🍎 {t.apples}
-                                </button>
-                                <button
-                                    style={styles.cropButton(selectedCrop === 'apricots')}
-                                    onClick={() => setSelectedCrop(selectedCrop === 'apricots' ? null : 'apricots')}
-                                >
-                                    🍑 {t.apricots}
-                                </button>
-                            </div>
-
                             {/* Upload area */}
                             <div 
                                 onClick={handleFileSelect}

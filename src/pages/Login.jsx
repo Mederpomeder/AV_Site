@@ -166,14 +166,7 @@ const handleSubmit = async (e) => {
           </div>
         </form>
 
-        <div style={{ 
-          marginTop: '20px', 
-          fontSize: '12px', 
-          color: '#666',
-          textAlign: 'center'
-        }}>
-          Используется эндпоинт: <code>/login</code>
-        </div>
+        
       </div>
     </div>
   );
