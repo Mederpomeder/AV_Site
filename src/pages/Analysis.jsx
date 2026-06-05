@@ -38,6 +38,7 @@ const Analysis = ({ lang = 'ru' }) => {
     const [selectedCrop, setSelectedCrop] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [showTips, setShowTips] = useState(false);
 
     const texts = {
         ru: {
@@ -71,6 +72,34 @@ const Analysis = ({ lang = 'ru' }) => {
                 { value: 'grapes',      label: 'Виноград',  emoji: '🍇' },
                 { value: 'tomatoes',    label: 'Томаты',    emoji: '🍅' },
                 { value: 'wheat',       label: 'Пшеница',   emoji: '🌾' },
+            ],
+
+            // ============================================================
+            // 👇 РЕКОМЕНДАЦИИ — меняйте текст, ссылки и иконки здесь
+            // ============================================================
+            tipsTitle: '💡 Рекомендации для ваших культур',
+            tips: [
+                {
+                    icon: '🏪',
+                    title: 'Где купить удобрения',
+                    text: 'Посетите наш рекомендуемый магазин для качественных удобрений и средств защиты растений.',
+                    linkText: 'Перейти в магазин →',
+                    link: 'https://example.com/shop',          // ← замените на вашу ссылку
+                },
+                {
+                    icon: '🌱',
+                    title: 'Уход за деревьями',
+                    text: 'Ваши деревья нуждаются в регулярной обрезке и поливе. Узнайте больше о правильном уходе.',
+                    linkText: 'Читать руководство →',
+                    link: 'https://example.com/guide',         // ← замените на вашу ссылку
+                },
+                {
+                    icon: '🚜',
+                    title: 'Агрономическая помощь',
+                    text: 'Нужна консультация агронома? Свяжитесь с нашими специалистами для личного осмотра.',
+                    linkText: 'Связаться →',
+                    link: 'https://example.com/contact',       // ← замените на вашу ссылку
+                },
             ],
         
             steps: [
@@ -159,50 +188,80 @@ const Analysis = ({ lang = 'ru' }) => {
                 { value: 'tomatoes',    label: 'Tomatoes',  emoji: '🍅' },
                 { value: 'wheat',       label: 'Wheat',     emoji: '🌾' },
             ],
+
+            // ============================================================
+            // 👇 RECOMMENDATIONS — change text, links and icons here
+            // ============================================================
+            tipsTitle: '💡 Recommendations for your crops',
+            tips: [
+                {
+                    icon: '🏪',
+                    title: 'Where to buy supplies',
+                    text: 'Visit our recommended store for quality fertilizers and plant protection products.',
+                    linkText: 'Go to store →',
+                    link: 'https://example.com/shop',          // ← replace with your link
+                },
+                {
+                    icon: '🌱',
+                    title: 'Tree care tips',
+                    text: 'Your trees need regular pruning and watering. Learn more about proper care techniques.',
+                    linkText: 'Read the guide →',
+                    link: 'https://example.com/guide',         // ← replace with your link
+                },
+                {
+                    icon: '🚜',
+                    title: 'Agronomist help',
+                    text: 'Need expert advice? Contact our specialists for an in-person crop inspection.',
+                    linkText: 'Contact us →',
+                    link: 'https://example.com/contact',       // ← replace with your link
+                },
+            ],
+        },
             steps: [
-        {
-            id: 1,
-            t: "Upload",
-            d: "Upload a photo or video of the plant",
-            icon: (
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 16V4M12 4L8 8M12 4L16 8M4 20H20" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-            )
-        },
-        {
-            id: 2,
-            t: "AI Analysis",
-            d: "Neural network analyzes the image",
-            icon: (
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.5 15.5C8 15.5 6.5 14.5 6 13C5 12.5 4.5 11.5 4.5 10.5C4.5 9 5.5 8 7 8C7 6 8.5 4.5 10.5 4.5C11.5 4.5 12.5 5 13 6C13.5 5 14.5 4.5 15.5 4.5C17.5 4.5 19 6 19 8C20.5 8 21.5 9 21.5 10.5C21.5 11.5 21 12.5 20 13C19.5 14.5 18 15.5 16.5 15.5" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round"/>
-                    <path d="M12 15.5V18M10 20H14" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-            )
-        },
-        {
-            id: 3,
-            t: "Processing",
-            d: "Comparison with disease database",
-            icon: (
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 20H20M7 20v-5M12 20V8M17 20v-8" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-            )
-        },
-        {
-            id: 4,
-            t: "Report",
-            d: "Full report with recommendations",
-            icon: (
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#2D6A2E" strokeWidth="1.8" strokeLinejoin="round"/>
-                    <path d="M14 2v6h6M8 13h8M8 17h5" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-            )
-        }
-    ],
+        
+            { 
+                id: 1,
+                t: "Upload",
+                d: "Upload a photo or video of the plant",
+                icon: (
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 16V4M12 4L8 8M12 4L16 8M4 20H20" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                )
+            },
+            {
+                id: 2,
+                t: "AI Analysis",
+                d: "Neural network analyzes the image",
+                icon: (
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.5 15.5C8 15.5 6.5 14.5 6 13C5 12.5 4.5 11.5 4.5 10.5C4.5 9 5.5 8 7 8C7 6 8.5 4.5 10.5 4.5C11.5 4.5 12.5 5 13 6C13.5 5 14.5 4.5 15.5 4.5C17.5 4.5 19 6 19 8C20.5 8 21.5 9 21.5 10.5C21.5 11.5 21 12.5 20 13C19.5 14.5 18 15.5 16.5 15.5" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round"/>
+                        <path d="M12 15.5V18M10 20H14" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round"/>
+                    </svg>
+                )
+            },
+            {
+                id: 3,
+                t: "Processing",
+                d: "Comparison with disease database",
+                icon: (
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 20H20M7 20v-5M12 20V8M17 20v-8" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                )
+            },
+            {
+                id: 4,
+                t: "Report",
+                d: "Full report with recommendations",
+                icon: (
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#2D6A2E" strokeWidth="1.8" strokeLinejoin="round"/>
+                        <path d="M14 2v6h6M8 13h8M8 17h5" stroke="#2D6A2E" strokeWidth="1.8" strokeLinecap="round"/>
+                    </svg>
+                )
+            }
+        ],
     stats: {
         diagnosis: "Detected", cause: "Description", recommendation: "Measures",
         confidence: "Confidence", imageDetails: "Image Info", plantType: "Crop"
@@ -214,7 +273,7 @@ const Analysis = ({ lang = 'ru' }) => {
     }
            
         }
-    };
+    
 
     const t = texts[lang] || texts.ru;
 
@@ -535,6 +594,103 @@ const Analysis = ({ lang = 'ru' }) => {
                                 <p style={{ fontSize: '12px', color: '#A0AFA0', marginTop: '20px' }}>{t.fileTypes}</p>
                             </div>
                             <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+
+                            {/* ── Recommendations accordion ── */}
+                            <div style={{ marginTop: '24px' }}>
+                                {/* Toggle header — click to open/close */}
+                                <button
+                                    onClick={() => setShowTips(prev => !prev)}
+                                    style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        padding: '16px 22px',
+                                        background: showTips ? '#F0FAF0' : '#F7FAF7',
+                                        border: '1.5px solid ' + (showTips ? '#4CAF50' : '#D4E6D4'),
+                                        borderRadius: showTips ? '16px 16px 0 0' : '16px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.25s ease',
+                                        fontWeight: '700',
+                                        fontSize: '15px',
+                                        color: '#2D6A2E',
+                                    }}
+                                >
+                                    <span>{t.tipsTitle}</span>
+                                    <svg
+                                        width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                        style={{
+                                            transform: showTips ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.25s ease',
+                                            flexShrink: 0,
+                                        }}
+                                    >
+                                        <path d="M6 9l6 6 6-6" stroke="#4CAF50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </button>
+
+                                {/* Collapsible body */}
+                                <div style={{
+                                    overflow: 'hidden',
+                                    maxHeight: showTips ? '600px' : '0px',
+                                    transition: 'max-height 0.4s ease',
+                                    border: showTips ? '1.5px solid #4CAF50' : '1.5px solid transparent',
+                                    borderTop: 'none',
+                                    borderRadius: '0 0 16px 16px',
+                                    background: '#fff',
+                                }}>
+                                    <div style={{ padding: '8px 16px 16px' }}>
+                                        {/*
+                                         * ═══════════════════════════════════════════════════
+                                         * Each card comes from t.tips[] in the texts object.
+                                         * To ADD a card:    add a new {} entry to tips[]
+                                         * To EDIT text:     change title / text fields
+                                         * To EDIT a link:   change the link and linkText fields
+                                         * To ADD an icon:   change the emoji in the icon field
+                                         * ═══════════════════════════════════════════════════
+                                         */}
+                                        {t.tips.map((tip, idx) => (
+                                            <div key={idx} style={{
+                                                display: 'flex',
+                                                gap: '14px',
+                                                alignItems: 'flex-start',
+                                                padding: '14px 8px',
+                                                borderBottom: idx < t.tips.length - 1 ? '1px solid #EEF5EE' : 'none',
+                                            }}>
+                                                <span style={{
+                                                    fontSize: '26px',
+                                                    lineHeight: 1,
+                                                    flexShrink: 0,
+                                                    marginTop: '2px',
+                                                }}>{tip.icon}</span>
+                                                <div>
+                                                    <div style={{ fontWeight: '700', fontSize: '14px', color: '#1A2E1A', marginBottom: '4px' }}>
+                                                        {tip.title}
+                                                    </div>
+                                                    <div style={{ fontSize: '13px', color: '#667A66', lineHeight: '1.55', marginBottom: '8px' }}>
+                                                        {tip.text}
+                                                    </div>
+                                                    <a
+                                                        href={tip.link}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{
+                                                            fontSize: '13px',
+                                                            fontWeight: '600',
+                                                            color: '#4CAF50',
+                                                            textDecoration: 'none',
+                                                            borderBottom: '1px dashed #4CAF50',
+                                                            paddingBottom: '1px',
+                                                        }}
+                                                    >
+                                                        {tip.linkText}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
