@@ -36,6 +36,8 @@ const Analysis = ({ lang = 'ru' }) => {
     const [showHistory, setShowHistory] = useState(false);
     const [fileInfo, setFileInfo] = useState({});
     const [selectedCrop, setSelectedCrop] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     const texts = {
         ru: {
@@ -59,6 +61,17 @@ const Analysis = ({ lang = 'ru' }) => {
             cropLabel: "Выберите культуру",
             apples: "Яблоки",
             apricots: "Абрикосы",
+            // ============================================================
+            // 👇 ДОБАВЛЯЙТЕ НОВЫЕ КУЛЬТУРЫ ЗДЕСЬ (русский язык)
+            // Формат: { value: 'уникальный_ключ', label: 'Название', emoji: '🌿' }
+            // ============================================================
+            crops: [
+                { value: 'apples',      label: 'Яблоки',    emoji: '🍎' },
+                { value: 'apricots',    label: 'Абрикосы',  emoji: '🍑' },
+                { value: 'grapes',      label: 'Виноград',  emoji: '🍇' },
+                { value: 'tomatoes',    label: 'Томаты',    emoji: '🍅' },
+                { value: 'wheat',       label: 'Пшеница',   emoji: '🌾' },
+            ],
         
             steps: [
             {
@@ -135,6 +148,17 @@ const Analysis = ({ lang = 'ru' }) => {
             cropLabel: "Select crop",
             apples: "Apples",
             apricots: "Apricots",
+            // ============================================================
+            // 👇 ADD NEW CROPS HERE (English)
+            // Format: { value: 'unique_key', label: 'Display Name', emoji: '🌿' }
+            // ============================================================
+            crops: [
+                { value: 'apples',      label: 'Apples',    emoji: '🍎' },
+                { value: 'apricots',    label: 'Apricots',  emoji: '🍑' },
+                { value: 'grapes',      label: 'Grapes',    emoji: '🍇' },
+                { value: 'tomatoes',    label: 'Tomatoes',  emoji: '🍅' },
+                { value: 'wheat',       label: 'Wheat',     emoji: '🌾' },
+            ],
             steps: [
         {
             id: 1,
@@ -380,6 +404,113 @@ const Analysis = ({ lang = 'ru' }) => {
                                      {t.authNotification}
                                 </div>
                             )}
+
+                            {/* ── Crop Dropdown ── */}
+                            <div
+                                ref={dropdownRef}
+                                onMouseEnter={() => setDropdownOpen(true)}
+                                onMouseLeave={() => setDropdownOpen(false)}
+                                style={{ position: 'relative', display: 'inline-block', marginBottom: '24px' }}
+                            >
+                                {/* Trigger button */}
+                                <button style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    padding: '12px 20px',
+                                    borderRadius: '14px',
+                                    border: '1.5px solid ' + (selectedCrop ? '#4CAF50' : '#C8D8C8'),
+                                    background: selectedCrop ? '#F1FAF1' : '#fff',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '15px',
+                                    color: selectedCrop ? '#2D6A2E' : '#4A5A4A',
+                                    boxShadow: '0 2px 8px rgba(76,175,80,0.08)',
+                                    transition: 'all 0.2s ease',
+                                    userSelect: 'none',
+                                    minWidth: '200px',
+                                    justifyContent: 'space-between',
+                                }}>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ fontSize: '20px' }}>
+                                            {selectedCrop ? t.crops.find(c => c.value === selectedCrop)?.emoji : '🌿'}
+                                        </span>
+                                        {selectedCrop
+                                            ? t.crops.find(c => c.value === selectedCrop)?.label
+                                            : t.cropLabel}
+                                    </span>
+                                    {/* Animated chevron */}
+                                    <svg
+                                        width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                        style={{
+                                            transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.25s ease',
+                                            color: '#4CAF50',
+                                        }}
+                                    >
+                                        <path d="M6 9l6 6 6-6" stroke="#4CAF50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </button>
+
+                                {/* Dropdown panel */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 'calc(100% + 6px)',
+                                    left: 0,
+                                    minWidth: '220px',
+                                    background: '#fff',
+                                    borderRadius: '16px',
+                                    boxShadow: '0 12px 40px rgba(0,0,0,0.13)',
+                                    border: '1px solid #E4EDE4',
+                                    overflow: 'hidden',
+                                    zIndex: 200,
+                                    // CSS-only slide + fade
+                                    opacity: dropdownOpen ? 1 : 0,
+                                    transform: dropdownOpen ? 'translateY(0px)' : 'translateY(-8px)',
+                                    pointerEvents: dropdownOpen ? 'auto' : 'none',
+                                    transition: 'opacity 0.22s ease, transform 0.22s ease',
+                                }}>
+                                    {/*
+                                     * ═══════════════════════════════════════════════════
+                                     * OPTIONS come from t.crops array above in `texts`.
+                                     * To add a new crop: add an entry to crops[] in both
+                                     * the 'ru' and 'en' sections of the texts object.
+                                     * ═══════════════════════════════════════════════════
+                                     */}
+                                    {t.crops.map((crop, idx) => (
+                                        <button
+                                            key={crop.value}
+                                            onClick={() => { setSelectedCrop(crop.value); setDropdownOpen(false); }}
+                                            style={{
+                                                width: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '12px',
+                                                padding: '12px 18px',
+                                                background: selectedCrop === crop.value ? '#F0FAF0' : 'transparent',
+                                                border: 'none',
+                                                borderBottom: idx < t.crops.length - 1 ? '1px solid #F0F4F0' : 'none',
+                                                cursor: 'pointer',
+                                                textAlign: 'left',
+                                                fontSize: '14px',
+                                                fontWeight: selectedCrop === crop.value ? '700' : '500',
+                                                color: selectedCrop === crop.value ? '#2D6A2E' : '#3A4A3A',
+                                                transition: 'background 0.15s ease',
+                                            }}
+                                            onMouseEnter={e => { if (selectedCrop !== crop.value) e.currentTarget.style.background = '#F6FBF6'; }}
+                                            onMouseLeave={e => { if (selectedCrop !== crop.value) e.currentTarget.style.background = 'transparent'; }}
+                                        >
+                                            <span style={{ fontSize: '20px', lineHeight: 1 }}>{crop.emoji}</span>
+                                            <span>{crop.label}</span>
+                                            {selectedCrop === crop.value && (
+                                                <svg style={{ marginLeft: 'auto' }} width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="#4CAF50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
 
                             {/* Upload area */}
                             <div 
